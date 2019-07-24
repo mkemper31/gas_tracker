@@ -1,0 +1,35 @@
+<nav class="px-5 navbar navbar-expand-sm navbar-dark bg-dark fixed-top" id="header-bar">
+    <a class="navbar-brand col-2" href="{% url 'users:home' %}">Test App</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+            {% if not request.session.current_user %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'users:home' %}">Home</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'users:dashboard' %}">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'users:home' %}">Profile</a>
+            </li>
+            {% endif %}
+        </ul>
+        <div>
+            <ul class="navbar-nav">
+                {% if not request.session.current_user %}
+                <li class="nav-item">
+                    <a class="nav-item nav-link" href="{% url 'users:signin' %}">Sign In</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-item nav-link" href="{% url 'users:logout' %}">Log Out</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

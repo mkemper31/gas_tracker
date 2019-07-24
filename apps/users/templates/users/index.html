@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        <title>Home Page</title>
+        {% load static %}
+		<meta charset="utf-8">
+		<meta name="description" content="Home page">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="{% static 'users/css/style.css' %}">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	</head>
+	<body>
+        <main role="main">
+            <div class="container">
+                <div class="jumbotron">
+                    <h1 class="display-4">Welcome to Gas Tracker</h1>
+                    <p class="lead">A tool to keep track of your car's usage of, and your spending on, fuel</p>
+                    <a class="btn btn-primary" href="{% url 'users:register' %}">Register</a>
+                    <a class="btn btn-primary" href="{% url 'users:signin' %}">Sign In</a>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 my-2" id="infobox1">
+                        <h3>Multiple cars</h3>
+                        <p>You'll be able to keep track of up to five cars' gas usage. Your whole family's data in one place.</p>
+                    </div>
+                    <div class="col-md-4 border-left border-right my-2" id="infobox2">
+                        <h3>Flexible graphing</h3>
+                        <p>Track a variety of metrics over time, including mileage, amount spent, and more.</p>
+                    </div>
+                    <div class="col-md-4 my-2" id="infobox3">
+                        <h3>Trip planner</h3>
+                        <p>Plan your trip, and get an estimate for how much gas you'll use, how much you'll spend, and how often you'll need to stop.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+	</body>
+</html>
