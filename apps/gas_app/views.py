@@ -2,6 +2,9 @@
 Define functions for each URL route
 """
 from django.shortcuts import render, redirect, reverse
+from django.contrib import messages
+from .models import Car
+from apps.users.views import logged_in, cur_usr_id
 
 # Create your views here.
 def index(request): #TODO GET USER DATA RENDER gas:home
@@ -22,6 +25,13 @@ def create_car(request): #TODO POST SUBMIT NEW CAR FORM REDIRECT gas:create_car
     """
     POSTs the form for the new car
     """
+    print(request.POST)
+    errors = Car.objects.validate(request.POST)
+    print(errors)
+    if errors:
+        for key, value in errors.items():
+            messages.error(request, value, extra_tags=key)
+        return redirect(reverse('gas:new_car'))
     return redirect(reverse('gas:home'))
 
 

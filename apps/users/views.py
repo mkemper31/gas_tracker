@@ -7,7 +7,7 @@ from .models import User
 # Create your views here.
 def index(request):
     if logged_in(request):
-        return redirect(reverse('users:success'))
+        return redirect(reverse('gas:home'))
     return render(request, 'users/index.html')
 
 
@@ -21,32 +21,37 @@ def signin(request):
 
 def submit_register(request):
     if request.method != "POST":
-        return redirect(reverse('users:index'))
+        return redirect(reverse('users:register'))
     errors = User.objects.validate_registration(request.POST)
     if errors:
         for key, value in errors.items():
             messages.error(request, value, extra_tags=key)
-        return redirect(reverse('users:index'))
+        return redirect(reverse('users:register'))
     else:
-        passhash = bcrypt.hashpw(request.POST['reg_password'].encode(), bcrypt.gensalt())
-        User.objects.create(first_name=request.POST['first_name'], last_name=request.POST['last_name'], email=request.POST['reg_email'], birthdate=request.POST['birthdate'],pw_hash=passhash)
+        passhash = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt())
+        User.objects.create(first_name=request.POST['first_name'], last_name=request.POST['last_name'], email=request.POST['email'], birthdate=request.POST['birthdate'], pw_hash=passhash, user_level=5)
+        new_usr = User.objects.last()
+        if new_usr == User.objects.first():
+            print("Assigning new super admin")
+            new_usr.user_level = 10
+            new_usr.save()
         request.session['current_user'] = User.objects.last().id
         messages.success(request, "Successfully registered")
-        return redirect(reverse('gas:home')) # TODO: redirect to proper route
+        return redirect(reverse('gas:home')) # DONE: redirect to proper route
 
 
 def submit_signin(request):
     if request.method != "POST":
-        return redirect(reverse('users:index'))
+        return redirect(reverse('users:signin'))
     errors = User.objects.validate_login(request.POST)
     if errors:
         for key, value in errors.items():
             messages.error(request, value, extra_tags=key)
-        return redirect(reverse('users:index'))
+        return redirect(reverse('users:signin'))
     else:
-        request.session['current_user'] = User.objects.get(email=request.POST['login_email']).id
+        request.session['current_user'] = User.objects.get(email=request.POST['email']).id
         messages.success(request, "Successfully logged in")
-        return redirect(reverse('gas:home')) # TODO: redirect to proper route
+        return redirect(reverse('gas:home')) # DONE: redirect to proper route
 
 
 def dashboard(request):
@@ -54,7 +59,7 @@ def dashboard(request):
 
 def success(request):
     if not logged_in(request):
-        return redirect(reverse('users:index'))
+        return redirect(reverse('users:home'))
     context = {
         'first_name': User.objects.get(id=request.session['current_user']).first_name,
         'last_name': User.objects.get(id=request.session['current_user']).last_name,
@@ -67,7 +72,7 @@ def success(request):
 def logout(request):
     request.session.flush()
     messages.success(request, "Successfully logged out")
-    return redirect(reverse('users:index'))
+    return redirect(reverse('users:home'))
 
 
 def invalid(request):

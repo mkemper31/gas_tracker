@@ -13,23 +13,23 @@ class UserManager(models.Manager):
             errors['first_name'] = 'First name must be at least 2 characters.'
         if len(post_data['last_name']) < 2:
             errors['last_name'] = 'Last name must be at least 2 characters.'
-        if not EMAIL_REGEX.match(post_data['reg_email']):
-            errors['email_registration'] = 'Please enter a valid email.'
-        elif User.objects.filter(email=post_data['reg_email']):
-            errors['email_registration'] = 'Email address already registered.'
+        if not EMAIL_REGEX.match(post_data['email']):
+            errors['email'] = 'Please enter a valid email.'
+        elif User.objects.filter(email=post_data['email']):
+            errors['email'] = 'Email address already registered.'
         if datetime.today().year - datetime.strptime(post_data['birthdate'], "%Y-%m-%d").year < 13:
-            errors['birthdate_registration'] = "You must be 13 years or older to register."
-        if not PASSWORD_REGEX.match(post_data['reg_password']):
-            errors['password_registration'] = 'Password must have at least one uppercase letter, one lowercase letter, and one number, and be 8 to 40 characters in length.'
-        if post_data['reg_password'] != post_data['confirmpassword']:
-            errors['password_confirmation'] = 'Given password does not match.'
+            errors['birthdate'] = "You must be 13 years or older to register."
+        if not PASSWORD_REGEX.match(post_data['password']):
+            errors['password'] = 'Password must have at least one uppercase letter, one lowercase letter, and one number, and be 8 to 40 characters in length.'
+        if post_data['password'] != post_data['confirm']:
+            errors['confirm'] = 'Given password does not match.'
         return errors
     def validate_login(self, post_data):
         errors = {}
-        if not User.objects.filter(email=post_data['login_email']):
+        if not User.objects.filter(email=post_data['email']):
             errors['login'] = 'Login failed.'
             return errors
-        if not bcrypt.checkpw(post_data['login_pass'].encode(), User.objects.get(email=post_data['login_email']).pw_hash.encode()):
+        if not bcrypt.checkpw(post_data['password'].encode(), User.objects.get(email=post_data['email']).pw_hash.encode()):
             errors['login'] = 'Login failed.'
             return errors
 

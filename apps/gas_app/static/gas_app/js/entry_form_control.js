@@ -12,4 +12,4 @@ $(document).ready(function() {
     today = yyyy+'-'+mm+'-'+dd;
     $('.datefield').attr("max", today);
     $('.datefield').attr("value", today);
-})
+});

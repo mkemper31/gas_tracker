@@ -36,10 +36,10 @@
     </div>
     <div class="form-group">
         <label for="birthdate">Birthdate:</label>
-        <input type="date" class="form-control {% if messages %}{% for message in messages %}{% if message.tags == 'birthdate_registration error' %}border border-danger{% endif %}{% endfor %}{% endif %}" name="birthdate" id="birthdate" aria-describedby="birthdate_help" required>
+        <input type="date" class="form-control {% if messages %}{% for message in messages %}{% if message.tags == 'birthdate error' %}border border-danger{% endif %}{% endfor %}{% endif %}" name="birthdate" id="birthdate" aria-describedby="birthdate_help" required>
         {% if messages %}
         {% for message in messages %}
-        {% if message.tags == 'birthdate_registration error' %}
+        {% if message.tags == 'birthdate error' %}
         <small id="birthdate_help" class="text-danger">{{message}}</small>
         {% endif %}
         {% endfor %}
