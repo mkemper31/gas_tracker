@@ -1,4 +1,8 @@
+{% if 'new' in request.path %}
 <form action="{% url 'gas:create_car' %}" method="POST">
+{% elif 'edit' in request.path %}
+<form action="{% url 'gas:update_car' %}" method="POST">
+{% endif %}
     {% csrf_token %}
     <div class="form-group">
         <div class="row justify-content-between">

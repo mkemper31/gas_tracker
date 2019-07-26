@@ -1,11 +1,13 @@
 <nav class="col-md-2 d-none d-md-block sidebar navbar-light bg-light">
     <div class="sidebar-sticky">
         <ul class="pl-4 navbar-nav flex-column">
-            <li class="nav-item"><a href="" class="nav-link">First Car</a></li>
-            <li class="nav-item"><a href="" class="nav-link">Second Car</a></li>
-            <li class="nav-item"><a href="" class="nav-link">Third Car</a></li>
-            <li class="nav-item"><a href="" class="nav-link">Fourth Car</a></li>
-            <li class="nav-item"><a href="" class="nav-link">Fifth Car</a></li>
+            {% for car in all_cars %}
+            <li class="nav-item"><a href="{% url 'gas:view_car' car.id %}" class="nav-link">{{car.name}}</a></li>
+            {% endfor %}
+            <hr>
+            {% if all_cars|length < 5%}
+            <li class="nav-item"><h6><a href="{% url 'gas:new_car' %}" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg> Add New Car</a></h6></li>
+            {% endif %}
         </ul>
     </div>
 </nav>

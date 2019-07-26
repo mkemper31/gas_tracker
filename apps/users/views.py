@@ -70,6 +70,9 @@ def success(request):
 
 
 def logout(request):
+    """
+    Logs out the current session and flushes the session.
+    """
     request.session.flush()
     messages.success(request, "Successfully logged out")
     return redirect(reverse('users:home'))
@@ -80,6 +83,12 @@ def invalid(request):
 
 
 def logged_in(request):
+    """
+    Checks that the session is presently logged in. Useful for situations in which you need
+    to check if a page should or should not be accessible when a user is or is not logged in.
+
+    Returns boolean.
+    """
     if 'current_user' not in request.session:
         print('current_user not in session')
         return False
@@ -88,6 +97,9 @@ def logged_in(request):
 
 
 def cur_usr_id(request):
+    """
+    Gets the value of the current user's ID, or returns None if not logged in.
+    """
     if 'current_user' not in request.session:
         return None
     else:

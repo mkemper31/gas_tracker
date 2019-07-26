@@ -12,7 +12,13 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         <script type="text/javascript" src="http://www.carqueryapi.com/js/carquery.0.3.4.js"></script>
-		<script src="{% static 'gas_app/js/delete_confirm.js' %}"></script>
+		<script type="text/javascript">
+			let year = "{{current_car.year}}";
+			let make_id = "{{current_car.make}}";
+			let model = "{{current_car.model}}";
+			let trim_id = "{{current_car.trim}}";
+		</script>
+		<script src="{% static 'gas_app/js/car_information.js' %}"></script>
 	</head>
 	<body>
         {% include "gas_app/partials/navbar.html" %}
@@ -22,34 +28,47 @@
                 <main role="main" class="col-md-9 col-lg-10 ml-sm-auto pt-5 mt-2 px-4">
 					<div class="pt-3 mb-3 border-bottom d-flex justify-content-between flex-wrap">
 						<h2>All Entries</h2>
-						<h3>2007 Toyota Avalon XLS</h3>
+						<h3 id="car_summary">Loading...</h3>
                     </div>
+                    {% if no_entries %}
                     <div class="px-3 row justify-content-between">
-                        <h4>Quick Summary</h4>
-                        <p><a href="">New Entry</a> | <a href="">Edit Last Entry</a> | <a href="">Edit Car</a> | <a tabindex="0" 
+                        <h4>No Entries Yet!</h4>
+                        <p><a href="{% url 'gas:new_entry' %}">New Entry</a> | <a href="{% url 'gas:edit_car' current_car.id %}">Edit Car</a> | <a tabindex="0" 
                         class="popover-dismiss text-danger"
                         role="button" 
                         data-toggle="popover"
                         data-trigger="focus" 
                         title="Are you sure?"
                         data-html="true"
-                        data-content="<a class='py-1 btn btn-danger border border-dark' href='delete'>Remove</a><a class='py-1 ml-3 btn btn-primary border border-dark' href=''>Cancel</a>">Delete Car</a></p>
+                        data-content="<a class='py-1 btn btn-danger border border-dark' href='{% url 'gas:delete_car' current_car.id %}'>Remove</a><a class='py-1 ml-3 btn btn-primary border border-dark' href=''>Cancel</a>">Delete Car</a></p>
+                    </div>
+                    {% else %}
+                    <div class="px-3 row justify-content-between">
+                        <h4>Quick Summary</h4>
+                        <p><a href="{% url 'gas:new_entry' %}">New Entry</a> | <a href="{% url 'gas:edit_entry' last_entry.id %}">Edit Last Entry</a> | <a href="{% url 'gas:edit_car' current_car.id %}">Edit Car</a> | <a tabindex="0" 
+                        class="popover-dismiss text-danger"
+                        role="button" 
+                        data-toggle="popover"
+                        data-trigger="focus" 
+                        title="Are you sure?"
+                        data-html="true"
+                        data-content="<a class='py-1 btn btn-danger border border-dark' href='{% url 'gas:delete_car' current_car.id %}'>Remove</a><a class='py-1 ml-3 btn btn-primary border border-dark' href=''>Cancel</a>">Delete Car</a></p>
                     </div>
                     <div class="row justify-content-around">
                         <div class="col-md-4">
                             <ul>
-                                <li>Odometer: 88522 miles</li>
-                                <li>Miles driven: 22031 miles</li>
-                                <li>Total gallons of gas: 1159.5</li>
-                                <li>Total spending: $4,141.23</li>
+                                <li>Odometer: {{last_entry.odometer}} miles</li>
+                                <li>Miles since first entry: {{total_miles}} miles</li>
+                                <li>Total gallons of gas: {{total_gallons}}</li>
+                                <li>Total spending: ${{total_spent}}</li>
                             </ul>
                         </div>
                         <div class="col-md-5">
                             <ul>
-                                <li>Average miles per day: 5.2</li>
-                                <li>Average price per gallon: $3.52</li>
-                                <li>Average mileage: 19 miles per gallon</li>
-                                <li>Average cost per mile: $0.19 per mile</li>
+                                <li>Average miles per day: {{avg_miles_per_day}} miles</li>
+                                <li>Average price per gallon: ${{avg_price_per_gal}}</li>
+                                <li>Average mileage: {{avg_mpg}} miles per gallon</li>
+                                <li>Average cost per mile: ${{avg_price_per_mile}} per mile</li>
                             </ul>
                         </div>
                     </div>
@@ -67,45 +86,30 @@
 								</tr>
 							</thead>
 							<tbody>
+                                {% for entry, value in comp_dict.items %}
 								<tr>
-									<td>18 July 2019</td>
-									<td>15.065</td>
-									<td>88414</td>
-									<td>259.5</td>
-									<td>17.22</td>
-									<td>$58.14</td>
-									<td>$3.86</td>
-								</tr>
+									<td>{{entry.entry_date}}</td>
+									<td>{{entry.gallons}}</td>
+                                    <td>{{entry.odometer}}</td>
+                                    <td>{{value.0}} miles</td>
+									<td>{{value.1|floatformat:2}} mpg</td>
+									<td>${{entry.price|floatformat:2}}</td>
+									<td>${{entry.price_per_gallon|floatformat:2}}</td>
+                                </tr>
+                                {% endfor %}
 								<tr>
-									<td>29 June 2019</td>
-									<td>12.619</td>
-									<td>88154</td>
-									<td>240.7</td>
-									<td>19.07</td>
-									<td>$46.17</td>
-									<td>$3.66</td>
-								</tr>
-								<tr>
-									<td>16 June 2019</td>
-									<td>14.936</td>
-									<td>87914</td>
-									<td>329.8</td>
-									<td>22.08</td>
-									<td>$55.25</td>
-									<td>$3.70</td>
-								</tr>
-								<tr>
-									<td>7 June 2019</td>
-									<td>14.233</td>
-									<td>87584</td>
-									<td>271.4</td>
-									<td>19.07</td>
-									<td>$53.36</td>
-									<td>$3.75</td>
-								</tr>
+									<td>{{all_entries.last.entry_date}}</td>
+									<td>{{all_entries.last.gallons}}</td>
+                                    <td>{{all_entries.last.odometer}}</td>
+                                    <td> --- </td>
+									<td> --- </td>
+									<td>${{all_entries.last.price|floatformat:2}}</td>
+									<td>${{all_entries.last.price_per_gallon|floatformat:2}}</td>
+                                </tr>
 							</tbody>
 						</table>
-					</div>
+                    </div>
+                    {% endif %}
                 </main>
             </div>
         </div>

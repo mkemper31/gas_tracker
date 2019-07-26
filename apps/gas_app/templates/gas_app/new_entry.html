@@ -17,6 +17,13 @@
         {% elif 'cars' in request.path %}
         <script src="{% static 'gas_app/js/car_form_control.js' %}"></script>
         {% endif %}
+		<script type="text/javascript">
+			let year = "{{current_car.year}}";
+			let make_id = "{{current_car.make}}";
+			let model = "{{current_car.model}}";
+			let trim_id = "{{current_car.trim}}";
+		</script>
+		<script src="{% static 'gas_app/js/car_information.js' %}"></script>
 	</head>
 	<body>
         {% include "gas_app/partials/navbar.html" %}

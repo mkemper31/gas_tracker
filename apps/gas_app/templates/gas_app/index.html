@@ -13,8 +13,17 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-trendline@0.1.1/src/chartjs-plugin-trendline.min.js"></script>
 		<script type="text/javascript" src="http://www.carqueryapi.com/js/carquery.0.3.4.js"></script>
+		<script type="text/javascript">
+			let year = "{{current_car.year}}";
+			let make_id = "{{current_car.make}}";
+			let model = "{{current_car.model}}";
+			let trim_id = "{{current_car.trim}}";
+			let data_dict = "{{data_json|safe}}";
+		</script>
 		<script src="{% static 'gas_app/js/graph.js' %}"></script>
+		<script src="{% static 'gas_app/js/car_information.js' %}"></script>
 	</head>
 	<body>
 		{% include "gas_app/partials/navbar.html" %}
@@ -23,13 +32,13 @@
 				{% include "gas_app/partials/sidebar.html" %}
 				<main role="main" class="col-md-9 col-lg-10 ml-sm-auto pt-5 mt-2 px-4">
 					<div class="py-3 border-bottom d-flex justify-content-between flex-wrap">
-						<h2>My Car</h2>
-						<h3>2007 Toyota Avalon XLS</h3>
+						<h2>{{current_car.name}}</h2>
+						<h3 id="car_summary">Loading...</h3>
 					</div>
 					<canvas id="myChart" class="my-4 w-100"></canvas>
 					<div class="px-3 row justify-content-between">
-						<h3>Data Display</h3>
-						<p><a href="">Edit Last Entry</a> | <a href="">View More Entries</a></p>
+						<h3>Recent Entries</h3>
+						<p><a href="{% url 'gas:new_entry' %}">New Entry</a> | <a href="{% url 'gas:edit_entry' last_entry.id %}">Edit Last Entry</a> | <a href="{% url 'gas:view_car' current_car.id %}">View More Entries</a></p>
 					</div>
 					<div class="table-responsive">
 						<table class="table table-striped table-bordered table-sm">
@@ -45,42 +54,17 @@
 								</tr>
 							</thead>
 							<tbody>
+								{% for entry, value in comp_dict.items %}
 								<tr>
-									<td>18 July 2019</td>
-									<td>15.065</td>
-									<td>88414</td>
-									<td>259.5</td>
-									<td>17.22</td>
-									<td>$58.14</td>
-									<td>$3.86</td>
+									<td>{{entry.entry_date}}</td>
+									<td>{{entry.gallons}}</td>
+									<td>{{entry.odometer}}</td>
+									<td>{{value.0}}</td>
+									<td>{{value.1|floatformat:2}}</td>
+									<td>${{entry.price|floatformat:2}}</td>
+									<td>${{entry.price_per_gallon|floatformat:2}}</td>
 								</tr>
-								<tr>
-									<td>29 June 2019</td>
-									<td>12.619</td>
-									<td>88154</td>
-									<td>240.7</td>
-									<td>19.07</td>
-									<td>$46.17</td>
-									<td>$3.66</td>
-								</tr>
-								<tr>
-									<td>16 June 2019</td>
-									<td>14.936</td>
-									<td>87914</td>
-									<td>329.8</td>
-									<td>22.08</td>
-									<td>$55.25</td>
-									<td>$3.70</td>
-								</tr>
-								<tr>
-									<td>7 June 2019</td>
-									<td>14.233</td>
-									<td>87584</td>
-									<td>271.4</td>
-									<td>19.07</td>
-									<td>$53.36</td>
-									<td>$3.75</td>
-								</tr>
+								{% endfor %}
 							</tbody>
 						</table>
 					</div>

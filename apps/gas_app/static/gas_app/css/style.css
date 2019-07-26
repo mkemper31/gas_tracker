@@ -16,3 +16,7 @@
     overflow-x: hidden;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }
+
+#title-img {
+    width: 30px;
+}

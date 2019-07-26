@@ -1,20 +1,36 @@
 $(document).ready(function() {
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var chart = new Chart(ctx, {
+    let ctx = document.getElementById('myChart').getContext('2d');
+    data_dict = data_dict.replace(/'/g, '"');
+    parsed_data = JSON.parse(data_dict);
+    console.log(parsed_data['dates'])
+    let chart = new Chart(ctx, {
         // The type of chart we want to create
         type: 'line',
 
         // The data for our dataset
         data: {
-            labels: ['23 May 2019', '7 June 2019', '16 June 2019', '29 June 2019', '18 July 2019'],
+            labels: parsed_data['dates'],
             datasets: [{
                 label: 'Miles Per Gallon',
-                borderColor: 'rgb(255, 99, 132)',
-                data: [18, 16, 20, 19, 15]
+                borderColor: 'blue',
+                data: parsed_data['cost_per_gallon'],
+                trendlineLinear: {
+                    style: "rgb(43 ,66 ,255, 0.5)",
+                    lineStyle: "dotted",
+                    width: 2
+                }
             }]
         },
 
         // Configuration options go here
-        options: {}
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: false
+                    }
+                }]
+            },
+        }
     });
 })
