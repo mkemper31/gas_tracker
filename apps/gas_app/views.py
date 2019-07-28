@@ -27,7 +27,7 @@ def index(request): #TODO GET USER DATA RENDER gas:home
     all_entries = Entry.objects.annotate(price_per_gallon=F('price') / F('gallons')).filter(car=current_car).order_by('-id')
     entries = Entry.objects.annotate(price_per_gallon=F('price') / F('gallons')).filter(car=current_car).order_by('-id')[:6]
     comparison_dict = {}
-    all_data = { 
+    all_data = {
         "dates": [],
         "gallons": [],
         "odometer": [],
@@ -46,6 +46,12 @@ def index(request): #TODO GET USER DATA RENDER gas:home
         all_data['miles_since_last'].append(mile_comparison)
         mpg_comparison = mile_comparison / all_entries[i].gallons
         all_data['miles_per_gallon'].append(mpg_comparison)
+        days_between = all_entries[i].entry_date - all_entries[i+1].entry_date
+        try:
+            per_day_comparison = mile_comparison / days_between.days
+        except ZeroDivisionError:
+            per_day_comparison = 0
+        all_data['miles_per_day'].append(per_day_comparison)
         all_data['cost'].append(all_entries[i].price)
         all_data['cost_per_gallon'].append(round(all_entries[i].price_per_gallon, 2))
     for key in all_data:
@@ -72,10 +78,8 @@ def new_car(request): #DONE GET NEW CAR FORM RENDER gas:new_car
     """
     if not logged_in(request):
         return redirect(reverse('users:home'))
-    current_car = Car.objects.get(id=cur_car_id(request))
     current_user = User.objects.get(id=cur_usr_id(request))
     context = {
-        "current_car": current_car,
         "all_cars": Car.objects.filter(owner=current_user),
     }
     return render(request, "gas_app/new_entry.html", context)

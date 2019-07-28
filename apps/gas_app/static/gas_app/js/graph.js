@@ -13,7 +13,7 @@ $(document).ready(function() {
             datasets: [{
                 label: 'Miles Per Gallon',
                 borderColor: 'blue',
-                data: parsed_data['cost_per_gallon'],
+                data: parsed_data['miles_per_gallon'],
                 trendlineLinear: {
                     style: "rgb(43 ,66 ,255, 0.5)",
                     lineStyle: "dotted",

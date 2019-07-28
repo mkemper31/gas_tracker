@@ -12,10 +12,14 @@ def index(request):
 
 
 def register(request):
+    if logged_in(request):
+        return redirect(reverse('gas:home'))
     return render(request, 'users/signin.html')
 
 
 def signin(request):
+    if logged_in(request):
+        return redirect(reverse('gas:home'))
     return render(request, 'users/signin.html')
 
 

@@ -1,5 +1,5 @@
 {% load static %}
-<nav class="px-4 navbar navbar-expand-sm navbar-dark bg-dark fixed-top" id="header-bar">
+<nav class="px-4 navbar navbar-expand-md navbar-dark bg-dark fixed-top" id="header-bar">
     <a class="navbar-brand col-2" href="{% url 'users:home' %}"><img id="title-img" src="{% static 'gas_app/images/gasoline.svg' %}"> Gas Tracker</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -19,6 +19,16 @@
             </li>
             {% endif %}
         </ul>
+        <div class="d-md-none bg-secondary px-2">
+            <ul class="navbar-nav mr-auto">
+                {% for car in all_cars %}
+                <li class="nav-item"><a href="{% url 'gas:view_car' car.id %}" class="nav-link">{{car.name}}</a></li>
+                {% endfor %}
+                {% if all_cars|length < 5%}
+                <li class="nav-item"><h6><a href="{% url 'gas:new_car' %}" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg> Add New Car</a></h6></li>
+                {% endif %}
+            </ul>
+        </div>
         <div>
             <ul class="navbar-nav">
                 {% if not request.session.current_user %}
